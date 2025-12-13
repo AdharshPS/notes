@@ -1,12 +1,10 @@
-import 'dart:ui';
-
 class NotesEntity {
   final int? id;
   final String? title;
   final String? content;
   final DateTime? createdAt;
   final DateTime? updatedAt;
-  final Color? color;
+  final int? color;
   final String? category;
 
   NotesEntity({

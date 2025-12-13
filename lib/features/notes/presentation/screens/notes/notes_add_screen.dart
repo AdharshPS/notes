@@ -1,14 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import '../provider/notes_provider.dart';
-import '../../domain/entities/notes_entity.dart';
+import '../../provider/notes_provider.dart';
+import '../../../domain/entities/notes_entity.dart';
 
 class NotesAddScreen extends StatefulWidget {
-  final String? title;
-  final String? content;
-  final Color? color;
-  const NotesAddScreen({super.key, this.title, this.content, this.color});
+  final NotesEntity? notes;
+  final bool isUpdate;
+  const NotesAddScreen({super.key, this.notes, this.isUpdate = false});
 
   @override
   State<NotesAddScreen> createState() => _NotesAddScreenState();
@@ -18,7 +17,7 @@ class _NotesAddScreenState extends State<NotesAddScreen> {
   final _titleController = TextEditingController();
   final _contentController = TextEditingController();
 
-  Color _selectedColor = _noteColors.first;
+  int _selectedColor = _noteColors.first.toARGB32();
 
   @override
   void dispose() {
@@ -37,14 +36,18 @@ class _NotesAddScreenState extends State<NotesAddScreen> {
     }
 
     final note = NotesEntity(
+      id: widget.isUpdate ? widget.notes?.id : null,
       title: title,
       content: content,
-      createdAt: DateTime.now(),
+      createdAt: widget.isUpdate ? widget.notes?.createdAt : DateTime.now(),
+      updatedAt: widget.isUpdate ? DateTime.now() : null,
       color: _selectedColor,
       category: null, // optional
     );
 
-    await context.read<NotesProvider>().add(note);
+    widget.isUpdate
+        ? await context.read<NotesProvider>().update(note)
+        : await context.read<NotesProvider>().add(note);
 
     if (mounted) {
       Navigator.pop(context);
@@ -54,17 +57,17 @@ class _NotesAddScreenState extends State<NotesAddScreen> {
   @override
   void initState() {
     super.initState();
-    if (widget.title != null || widget.content != null) {
-      _titleController.text = widget.title ?? '';
-      _contentController.text = widget.content ?? '';
-      _selectedColor = widget.color ?? _noteColors.first;
+    if (widget.notes != null) {
+      _titleController.text = widget.notes?.title ?? '';
+      _contentController.text = widget.notes?.content ?? '';
+      _selectedColor = widget.notes?.color ?? _noteColors.first.toARGB32();
     }
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: _selectedColor.withValues(),
+      backgroundColor: Color(_selectedColor),
       appBar: AppBar(
         backgroundColor: Colors.transparent,
         elevation: 0,
@@ -137,12 +140,12 @@ class _NotesAddScreenState extends State<NotesAddScreen> {
     return Row(
       children: [
         ..._noteColors.map((color) {
-          final isSelected = color == _selectedColor;
+          // final isSelected = color == _selectedColor;
 
           return Expanded(
             child: GestureDetector(
               onTap: () {
-                setState(() => _selectedColor = color);
+                setState(() => _selectedColor = color.toARGB32());
               },
               child: Container(
                 height: 50,

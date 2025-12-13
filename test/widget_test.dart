@@ -5,17 +5,29 @@
 // gestures. You can also use WidgetTester to find child widgets in the widget
 // tree, read text, and verify that the values of widget properties are correct.
 
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:notes/features/notes/data/datasources/notes_in_memory.dart';
+import 'package:hive/hive.dart';
+import 'package:notes/features/notes/data/datasources/notes_data_source_impl.dart';
+import 'package:notes/features/notes/data/models/notes_model.dart';
 import 'package:notes/features/notes/data/repositories/note_repository_impl.dart';
 
 import 'package:notes/main.dart';
 
 void main() {
   testWidgets('Counter increments smoke test', (WidgetTester tester) async {
-    final dataSource = NotesInMemoryDataSource();
+    var path = Directory.current.path;
+    Hive
+      ..init(path)
+      ..registerAdapter(NotesModelAdapter());
+
+    var notesBox = await Hive.openBox<NotesModel>('notes-box');
+
+    final dataSource = NotesDataSourceImpl(notesBox);
     final repo = NoteRepositoryImpl(local: dataSource);
+
     // Build our app and trigger a frame.
     await tester.pumpWidget(MainApp(repo: repo));
 

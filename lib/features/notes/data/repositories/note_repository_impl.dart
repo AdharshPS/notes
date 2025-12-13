@@ -19,4 +19,16 @@ class NoteRepositoryImpl implements NotesRepository {
     final model = await local.getNote();
     return model.map((e) => e.toEntity()).toList();
   }
+
+  @override
+  Future<NotesEntity> updateNotes(NotesEntity notes) async {
+    final model = NotesModel.fromEntity(notes);
+    final updatedNote = await local.updateNote(model);
+    return updatedNote.toEntity();
+  }
+
+  @override
+  Future<void> deleteNotes(int key) async {
+    await local.deleteNote(key);
+  }
 }
