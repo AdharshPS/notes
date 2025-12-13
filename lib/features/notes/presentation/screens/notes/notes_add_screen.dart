@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:notes/core/color_constants.dart';
 import 'package:provider/provider.dart';
+import 'package:flutter_colorpicker/flutter_colorpicker.dart';
 
 import '../../provider/notes_provider.dart';
 import '../../../domain/entities/notes_entity.dart';
@@ -13,11 +15,11 @@ class NotesAddScreen extends StatefulWidget {
   State<NotesAddScreen> createState() => _NotesAddScreenState();
 }
 
-class _NotesAddScreenState extends State<NotesAddScreen> {
+class _NotesAddScreenState extends State<NotesAddScreen> with AppColors {
   final _titleController = TextEditingController();
   final _contentController = TextEditingController();
 
-  int _selectedColor = _noteColors.first.toARGB32();
+  int _selectedColor = Colors.white.toARGB32();
 
   @override
   void dispose() {
@@ -60,7 +62,7 @@ class _NotesAddScreenState extends State<NotesAddScreen> {
     if (widget.notes != null) {
       _titleController.text = widget.notes?.title ?? '';
       _contentController.text = widget.notes?.content ?? '';
-      _selectedColor = widget.notes?.color ?? _noteColors.first.toARGB32();
+      _selectedColor = widget.notes?.color ?? Colors.white.toARGB32();
     }
   }
 
@@ -72,22 +74,47 @@ class _NotesAddScreenState extends State<NotesAddScreen> {
         backgroundColor: Colors.transparent,
         elevation: 0,
         leading: IconButton(
-          icon: const Icon(Icons.close, color: Colors.black),
+          icon: Icon(Icons.close, color: getTextColor(Color(_selectedColor))),
           onPressed: () => Navigator.pop(context),
         ),
         title: Hero(
           tag: 'notes-add',
-          child: const Text(
+          child: Text(
             'New Note',
-            style: TextStyle(color: Colors.black, fontWeight: FontWeight.w600),
+            style: TextStyle(
+              color: getTextColor(Color(_selectedColor)),
+              fontWeight: FontWeight.w600,
+            ),
           ),
         ),
         actions: [
           IconButton(
-            icon: const Icon(Icons.check, color: Colors.black),
+            icon: Icon(Icons.check, color: getTextColor(Color(_selectedColor))),
             onPressed: _saveNote,
           ),
         ],
+      ),
+      floatingActionButton: FloatingActionButton.extended(
+        label: Text(
+          'Pick Color',
+          style: TextStyle(
+            color: getTextColor(Color(_selectedColor), inverted: true),
+          ),
+        ),
+        icon: Icon(
+          Icons.palette_outlined,
+          color: getTextColor(Color(_selectedColor), inverted: true),
+        ),
+        backgroundColor: getTextColor(Color(_selectedColor)),
+        onPressed: () async {
+          final pickedColor = await _showColorPicker(
+            context,
+            Color(_selectedColor),
+          );
+          _selectedColor = pickedColor != null
+              ? pickedColor.toARGB32()
+              : Colors.white.toARGB32();
+        },
       ),
       body: Column(
         children: [
@@ -104,7 +131,6 @@ class _NotesAddScreenState extends State<NotesAddScreen> {
               ),
             ),
           ),
-          _buildColorPicker(),
         ],
       ),
     );
@@ -113,11 +139,16 @@ class _NotesAddScreenState extends State<NotesAddScreen> {
   Widget _buildTitleField() {
     return TextField(
       controller: _titleController,
-      decoration: const InputDecoration(
+      decoration: InputDecoration(
         hintText: 'Title',
         border: InputBorder.none,
+        hintStyle: TextStyle(color: getTextColor(Color(_selectedColor))),
       ),
-      style: const TextStyle(fontSize: 22, fontWeight: FontWeight.w600),
+      style: TextStyle(
+        fontSize: 22,
+        fontWeight: FontWeight.w600,
+        color: getTextColor(Color(_selectedColor)),
+      ),
     );
   }
 
@@ -127,48 +158,48 @@ class _NotesAddScreenState extends State<NotesAddScreen> {
         controller: _contentController,
         maxLines: null,
         expands: true,
-        decoration: const InputDecoration(
+        decoration: InputDecoration(
           hintText: 'Write your note here...',
           border: InputBorder.none,
+          hintStyle: TextStyle(color: getTextColor(Color(_selectedColor))),
         ),
-        style: const TextStyle(fontSize: 16),
+        style: TextStyle(
+          fontSize: 16,
+          color: getTextColor(Color(_selectedColor)),
+        ),
       ),
     );
   }
 
-  Widget _buildColorPicker() {
-    return Row(
-      children: [
-        ..._noteColors.map((color) {
-          // final isSelected = color == _selectedColor;
+  Future<Color?> _showColorPicker(BuildContext context, Color currentColor) {
+    Color pickerColor = currentColor;
 
-          return Expanded(
-            child: GestureDetector(
-              onTap: () {
-                setState(() => _selectedColor = color.toARGB32());
-              },
-              child: Container(
-                height: 50,
-                decoration: BoxDecoration(
-                  color: color,
-                  borderRadius: BorderRadius.only(
-                    topRight: Radius.circular(12),
-                    topLeft: Radius.circular(12),
-                  ),
-                ),
-              ),
-            ),
-          );
-        }),
-      ],
+    // ValueChanged<Color> callback
+    void changeColor(Color color) {
+      setState(() => pickerColor = color);
+    }
+
+    // raise the [showDialog] widget
+    return showDialog<Color?>(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text('Pick a color!'),
+        content: SingleChildScrollView(
+          child: ColorPicker(
+            pickerColor: pickerColor,
+            onColorChanged: changeColor,
+          ),
+        ),
+        actions: <Widget>[
+          ElevatedButton(
+            child: const Text('Got it'),
+            onPressed: () {
+              setState(() => currentColor = pickerColor);
+              Navigator.of(context).pop(pickerColor);
+            },
+          ),
+        ],
+      ),
     );
   }
 }
-
-const List<Color> _noteColors = [
-  Color(0xFFFFF59D),
-  Color(0xFFFFCCBC),
-  Color(0xFFB2EBF2),
-  Color(0xFFC8E6C9),
-  Color(0xFFD1C4E9),
-];

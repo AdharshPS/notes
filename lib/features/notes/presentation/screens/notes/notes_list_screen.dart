@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
+import 'package:notes/core/color_constants.dart';
 import 'package:notes/features/notes/presentation/screens/notes/notes_add_screen.dart';
 import 'package:provider/provider.dart';
 import '../../provider/notes_provider.dart';
@@ -71,7 +72,7 @@ class NotesListPage extends StatelessWidget {
   }
 }
 
-class _NoteCard extends StatelessWidget {
+class _NoteCard extends StatelessWidget with AppColors {
   final NotesEntity note;
   const _NoteCard({required this.note});
 
@@ -135,9 +136,12 @@ class _NoteCard extends StatelessWidget {
                   note.title ?? '',
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
-                  style: const TextStyle(
+                  style: TextStyle(
                     fontSize: 16,
                     fontWeight: FontWeight.w600,
+                    color: note.color != null
+                        ? getTextColor(Color(note.color!))
+                        : Colors.white,
                   ),
                 ),
                 const SizedBox(height: 8),
@@ -147,8 +151,10 @@ class _NoteCard extends StatelessWidget {
                   overflow: TextOverflow.ellipsis,
                   style: TextStyle(
                     fontSize: 14,
-                    color: Colors.grey.shade700,
                     height: 1.4,
+                    color: note.color != null
+                        ? getTextColor(Color(note.color!))
+                        : Colors.white,
                   ),
                 ),
                 const SizedBox(height: 12),
@@ -159,13 +165,17 @@ class _NoteCard extends StatelessWidget {
                       _formatDate(note.createdAt!.toLocal()),
                       style: TextStyle(
                         fontSize: 12,
-                        color: Colors.grey.shade500,
+                        color: note.color != null
+                            ? getTextColor(Color(note.color!))
+                            : Colors.white,
                       ),
                     ),
-                    const Icon(
+                    Icon(
                       Icons.chevron_right,
                       size: 18,
-                      color: Colors.grey,
+                      color: note.color != null
+                          ? getTextColor(Color(note.color!))
+                          : Colors.white,
                     ),
                   ],
                 ),
