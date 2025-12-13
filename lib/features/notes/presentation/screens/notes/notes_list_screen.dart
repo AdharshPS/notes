@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:notes/features/notes/presentation/screens/notes/notes_add_screen.dart';
+import 'package:notes/features/notes/presentation/widgets/share_note.dart';
 import 'package:provider/provider.dart';
 import '../../provider/notes_provider.dart';
 import '../../../domain/entities/notes_entity.dart';
 
-class NotesListPage extends StatelessWidget {
-  const NotesListPage({super.key});
+class NotesListScreen extends StatelessWidget {
+  const NotesListScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -84,7 +85,9 @@ class _NoteCard extends StatelessWidget {
         motion: ScrollMotion(),
         children: [
           SlidableAction(
-            onPressed: (context) {},
+            onPressed: (context) {
+              shareNote(title: note.title ?? '', content: note.content ?? '');
+            },
             backgroundColor: Colors.green,
             foregroundColor: Colors.white,
             borderRadius: BorderRadius.circular(12),

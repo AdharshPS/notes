@@ -4,7 +4,7 @@ import 'package:notes/features/notes/data/datasources/notes_data_source_impl.dar
 import 'package:notes/features/notes/data/models/notes_model.dart';
 import 'package:notes/features/notes/data/repositories/note_repository_impl.dart';
 import 'package:notes/features/notes/presentation/provider/notes_provider.dart';
-import 'package:notes/features/notes/presentation/screens/notes/notes_list_screen.dart';
+import 'package:notes/features/notes/presentation/screens/splash/splash_screen.dart';
 import 'package:provider/provider.dart';
 
 Future<void> main() async {
@@ -36,7 +36,7 @@ class MainApp extends StatelessWidget {
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
         title: 'Notes App',
-        home: NotesListPage(),
+        home: const SplashScreen(),
       ),
     );
   }
