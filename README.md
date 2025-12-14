@@ -2,6 +2,12 @@
 
 A clean and simple **Notes application built with Flutter**, following **Clean Architecture** principles and using **Hive** for local storage.
 
+
+## 📦 Downloads
+
+👉 [Download latest version](https://github.com/AdharshPS/notes/releases/latest)
+
+
 ---
 
 ## 🚀 Features
@@ -106,15 +112,22 @@ git push origin v1.0.0
 Release APKs are available under
 GitHub → Releases
 
+---
+
 📌 Future Improvements
 
-🔐 App lock (PIN / Biometrics)
+- App lock (PIN / Biometrics)
 
-☁️ Cloud sync
+- todo and notification
 
-🔍 Search & filter notes
+- Cloud sync
 
-🧪 More test coverage
+- Search & filter notes
+
+- More test coverage
+
+
+---
 
 👨‍💻 Author
 
@@ -129,7 +142,6 @@ LinkedIn: https://www.linkedin.com/in/adharshzps/
 📄 License
 
 This project is licensed under the MIT License.
-
 
 ---
 
