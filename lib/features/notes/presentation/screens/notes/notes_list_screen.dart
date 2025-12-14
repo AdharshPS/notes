@@ -6,9 +6,14 @@ import 'package:provider/provider.dart';
 import '../../provider/notes_provider.dart';
 import '../../../domain/entities/notes_entity.dart';
 
-class NotesListScreen extends StatelessWidget {
+class NotesListScreen extends StatefulWidget {
   const NotesListScreen({super.key});
 
+  @override
+  State<NotesListScreen> createState() => _NotesListScreenState();
+}
+
+class _NotesListScreenState extends State<NotesListScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
