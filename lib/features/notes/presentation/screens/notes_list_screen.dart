@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
-import 'package:notes/features/notes/presentation/screens/notes/notes_add_screen.dart';
+import 'package:notes/features/notes/presentation/screens/notes_add_screen.dart';
 import 'package:notes/features/notes/presentation/widgets/share_note.dart';
 import 'package:provider/provider.dart';
-import '../../provider/notes_provider.dart';
-import '../../../domain/entities/notes_entity.dart';
+import '../provider/notes_provider.dart';
+import '../../domain/entities/notes_entity.dart';
 
 class NotesListScreen extends StatelessWidget {
   const NotesListScreen({super.key});

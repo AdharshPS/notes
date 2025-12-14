@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
-import 'package:notes/features/notes/presentation/screens/notes/notes_list_screen.dart';
+import 'package:notes/core/app/app_entry.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
@@ -16,7 +16,7 @@ class _SplashScreenState extends State<SplashScreen> {
       if (!mounted) return;
       Navigator.pushReplacement(
         context,
-        MaterialPageRoute(builder: (context) => NotesListScreen()),
+        MaterialPageRoute(builder: (context) => AppEntry()),
       );
     });
     super.initState();

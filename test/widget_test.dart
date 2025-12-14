@@ -5,11 +5,14 @@
 // gestures. You can also use WidgetTester to find child widgets in the widget
 // tree, read text, and verify that the values of widget properties are correct.
 
-import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:hive/hive.dart';
+import 'package:hive_flutter/hive_flutter.dart';
+import 'package:local_auth/local_auth.dart';
+import 'package:notes/core/app/app_life_cycle_observer.dart';
+import 'package:notes/features/applock/data/datasources/app_lock_data_source_impl.dart';
+import 'package:notes/features/applock/data/repositories/app_lock_repository_impl.dart';
+import 'package:notes/features/applock/presentation/provider/app_lock_provider.dart';
 import 'package:notes/features/notes/data/datasources/notes_data_source_impl.dart';
 import 'package:notes/features/notes/data/models/notes_model.dart';
 import 'package:notes/features/notes/data/repositories/note_repository_impl.dart';
@@ -18,18 +21,29 @@ import 'package:notes/main.dart';
 
 void main() {
   testWidgets('Counter increments smoke test', (WidgetTester tester) async {
-    var path = Directory.current.path;
-    Hive
-      ..init(path)
-      ..registerAdapter(NotesModelAdapter());
+    WidgetsFlutterBinding.ensureInitialized();
+    await Hive.initFlutter();
+    Hive.registerAdapter(NotesModelAdapter());
+    final LocalAuthentication auth = LocalAuthentication();
 
     var notesBox = await Hive.openBox<NotesModel>('notes-box');
 
-    final dataSource = NotesDataSourceImpl(notesBox);
-    final repo = NoteRepositoryImpl(local: dataSource);
+    final noteDataSource = NotesDataSourceImpl(notesBox);
+    final noteRepo = NoteRepositoryImpl(local: noteDataSource);
+    final appLockDataSource = AppLockDataSourceImpl(auth);
+    final appLockRepo = AppLockRepositoryImpl(appLockDataSource);
+
+    final authProvider = AppLockProvider(appLockRepo)..checkBiometrics();
+
+    // ---------- App lifecycle observer ----------
+    WidgetsBinding.instance.addObserver(AppLifecycleObserver(authProvider));
+
+    runApp(MainApp(noteRepo: noteRepo, appLockRepo: appLockRepo));
 
     // Build our app and trigger a frame.
-    await tester.pumpWidget(MainApp(repo: repo));
+    await tester.pumpWidget(
+      MainApp(noteRepo: noteRepo, appLockRepo: appLockRepo),
+    );
 
     // Verify that our counter starts at 0.
     expect(find.text('0'), findsOneWidget);

@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import '../../provider/notes_provider.dart';
-import '../../../domain/entities/notes_entity.dart';
+import '../provider/notes_provider.dart';
+import '../../domain/entities/notes_entity.dart';
 
 class NotesAddScreen extends StatefulWidget {
   final NotesEntity? notes;
