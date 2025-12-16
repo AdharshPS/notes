@@ -7,7 +7,11 @@
     {
       "name": "notes",
       "request": "launch",
-      "type": "dart"
+      "type": "dart",
+      "args": [
+            "--dart-define=AI_ENABLED=true",
+            "--dart-define=GROQ_API_KEY="
+          ]
     },
     {
       "name": "notes (profile mode)",

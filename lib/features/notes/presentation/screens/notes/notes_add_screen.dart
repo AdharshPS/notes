@@ -85,17 +85,24 @@ class _NotesAddScreenState extends State<NotesAddScreen> {
         ),
         actions: [
           TextButton(
-            onPressed: () {
-              context.read<AiProvider>().generateNote(
+            onPressed: () async {
+              final provider = context.read<AiProvider>();
+              await provider.generateNote(
                 title: _titleController.text.trim(),
                 content: _contentController.text.trim(),
               );
-              final provider = context.watch<AiProvider>();
-              _showAiResultDialog(
+              if (!context.mounted) return;
+              await _showAiResultDialog(
                 context,
                 title: provider.generatedNote?.title,
                 content: provider.generatedNote?.content,
-                onUse: () {},
+                onUse: () {
+                  setState(() {
+                    _titleController.text = provider.generatedNote?.title ?? '';
+                    _contentController.text =
+                        provider.generatedNote?.content ?? '';
+                  });
+                },
               );
             },
             child: Text('generate'),

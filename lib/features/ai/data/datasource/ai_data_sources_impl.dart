@@ -17,7 +17,7 @@ class AiDataSourcesImpl implements AiDataSources {
         'Content-Type': 'application/json',
       },
       body: jsonEncode({
-        "model": "llama3-8b-8192",
+        "model": "llama-3.1-8b-instant",
         "messages": [
           {
             "role": "system",
@@ -28,16 +28,28 @@ class AiDataSourcesImpl implements AiDataSources {
             "role": "user",
             "content":
                 """
-Generate a title and improved content for the following note.
+You are given a note with a title and content.
 
-Return ONLY valid JSON in this format:
+Your task:
+- Rewrite and improve the note
+- Do NOT change the topic
+- Do NOT introduce new ideas
+- Do NOT add explanations
+- Keep the meaning the same
+- Improve clarity and wording only
+- Correct the spelling mistakes and grammer
+- If there is no title, create a title based on the content
+- If there is no content, create a sample content based on title
+
+Return ONLY valid JSON in this exact format:
 {
   "title": "string",
   "content": "string"
 }
 
-Note:
-$aiModel
+Input note:
+Title: ${aiModel.title}
+Content: ${aiModel.content}
 """,
           },
         ],
@@ -50,9 +62,7 @@ $aiModel
     }
 
     final data = jsonDecode(response.body);
-    print('ai generated response: $data');
     final message = data['choices'][0]['message']['content'];
-
     final decoded = jsonDecode(message);
 
     return AiModel(
