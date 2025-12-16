@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:notes/features/ai/presentation/provider/ai_provider.dart';
 import 'package:provider/provider.dart';
 
 import '../../provider/notes_provider.dart';
@@ -83,6 +84,29 @@ class _NotesAddScreenState extends State<NotesAddScreen> {
           ),
         ),
         actions: [
+          TextButton(
+            onPressed: () async {
+              final provider = context.read<AiProvider>();
+              await provider.generateNote(
+                title: _titleController.text.trim(),
+                content: _contentController.text.trim(),
+              );
+              if (!context.mounted) return;
+              await _showAiResultDialog(
+                context,
+                title: provider.generatedNote?.title,
+                content: provider.generatedNote?.content,
+                onUse: () {
+                  setState(() {
+                    _titleController.text = provider.generatedNote?.title ?? '';
+                    _contentController.text =
+                        provider.generatedNote?.content ?? '';
+                  });
+                },
+              );
+            },
+            child: Text('generate'),
+          ),
           IconButton(
             icon: const Icon(Icons.check, color: Colors.black),
             onPressed: _saveNote,
@@ -161,6 +185,75 @@ class _NotesAddScreenState extends State<NotesAddScreen> {
           );
         }),
       ],
+    );
+  }
+
+  Future<void> _showAiResultDialog(
+    BuildContext context, {
+    required String? title,
+    required String? content,
+    VoidCallback? onUse,
+  }) {
+    return showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (_) => AlertDialog(
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+        title: const Text(
+          'AI Suggestion',
+          style: TextStyle(fontWeight: FontWeight.bold),
+        ),
+        content: SingleChildScrollView(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              const Text(
+                'Title',
+                style: TextStyle(
+                  fontSize: 13,
+                  fontWeight: FontWeight.w600,
+                  color: Colors.grey,
+                ),
+              ),
+              const SizedBox(height: 4),
+              Text(
+                title ?? '',
+                style: const TextStyle(
+                  fontSize: 16,
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
+              const SizedBox(height: 16),
+              const Text(
+                'Content',
+                style: TextStyle(
+                  fontSize: 13,
+                  fontWeight: FontWeight.w600,
+                  color: Colors.grey,
+                ),
+              ),
+              const SizedBox(height: 4),
+              Text(
+                content ?? '',
+                style: const TextStyle(fontSize: 14, height: 1.4),
+              ),
+            ],
+          ),
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: const Text('Cancel'),
+          ),
+          ElevatedButton(
+            onPressed: () {
+              Navigator.pop(context);
+              onUse?.call();
+            },
+            child: const Text('Use'),
+          ),
+        ],
+      ),
     );
   }
 }

@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:lottie/lottie.dart';
 import 'package:notes/features/notes/presentation/screens/notes/notes_list_screen.dart';
 
 class SplashScreen extends StatefulWidget {
@@ -12,7 +11,7 @@ class SplashScreen extends StatefulWidget {
 class _SplashScreenState extends State<SplashScreen> {
   @override
   void initState() {
-    Future.delayed(Duration(seconds: 3)).then((value) {
+    Future.delayed(Duration(seconds: 2)).then((value) {
       if (!mounted) return;
       Navigator.pushReplacement(
         context,
@@ -26,7 +25,9 @@ class _SplashScreenState extends State<SplashScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Center(
-        child: Lottie.asset('assets/animations/notebook_loading.json'),
+        child: SizedBox.expand(
+          child: Image.asset('assets/animations/noteflow.gif'),
+        ),
       ),
     );
   }
