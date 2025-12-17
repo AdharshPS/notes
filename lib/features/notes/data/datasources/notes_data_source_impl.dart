@@ -11,7 +11,7 @@ class NotesDataSourceImpl implements NotesLocalDataSource {
     final key = await box.add(note);
     final saved = note.copyWith(id: key);
     await box.put(key, saved);
-    return note;
+    return saved;
   }
 
   @override

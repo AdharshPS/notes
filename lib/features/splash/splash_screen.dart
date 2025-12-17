@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:notes/features/notes/presentation/screens/notes/notes_list_screen.dart';
+import 'package:notes/features/landing/landing_screen.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
@@ -15,7 +15,7 @@ class _SplashScreenState extends State<SplashScreen> {
       if (!mounted) return;
       Navigator.pushReplacement(
         context,
-        MaterialPageRoute(builder: (context) => NotesListScreen()),
+        MaterialPageRoute(builder: (context) => LandingScreen()),
       );
     });
     super.initState();

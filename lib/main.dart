@@ -13,6 +13,11 @@ import 'package:notes/features/notes/data/repositories/note_repository_impl.dart
 import 'package:notes/features/notes/domain/repositories/notes_repository.dart';
 import 'package:notes/features/notes/presentation/provider/notes_provider.dart';
 import 'package:notes/features/splash/splash_screen.dart';
+import 'package:notes/features/todo/data/datasources/todo_data_source_impl.dart';
+import 'package:notes/features/todo/data/models/todo_model.dart';
+import 'package:notes/features/todo/data/respositories/todo_repository_impl.dart';
+import 'package:notes/features/todo/domain/repositories/todo_repositories.dart';
+import 'package:notes/features/todo/presentation/provider/todo_provider.dart';
 import 'package:provider/provider.dart';
 
 Future<void> main() async {
@@ -21,11 +26,14 @@ Future<void> main() async {
       WidgetsFlutterBinding.ensureInitialized();
       await Hive.initFlutter();
       Hive.registerAdapter(NotesModelAdapter());
+      Hive.registerAdapter(TodoModelAdapter());
 
       late final Box<NotesModel> notesBox;
+      late final Box<TodoModel> todoBox;
 
       try {
         notesBox = await Hive.openBox<NotesModel>('notes-box');
+        todoBox = await Hive.openBox<TodoModel>('todo-box');
       } catch (e) {
         debugPrint('❌ Failed to open Hive box: $e');
         rethrow;
@@ -55,7 +63,11 @@ Future<void> main() async {
         aiRepo = DisabledAiRepositoryImpl();
       }
 
-      runApp(MainApp(noteRepo: noteRepo, aiRepo: aiRepo));
+      /// todo DI
+      final todoDs = TodoDataSourceImpl(todoBox);
+      final todoRepo = TodoRepositoryImpl(todoDs);
+
+      runApp(MainApp(noteRepo: noteRepo, aiRepo: aiRepo, todoRepo: todoRepo));
     },
     (error, stack) {
       debugPrint('❌ Uncaught startup error: $error');
@@ -67,8 +79,14 @@ Future<void> main() async {
 class MainApp extends StatelessWidget {
   final NotesRepository noteRepo;
   final AiRepositories aiRepo;
+  final TodoRepositories todoRepo;
 
-  const MainApp({required this.noteRepo, super.key, required this.aiRepo});
+  const MainApp({
+    required this.noteRepo,
+    super.key,
+    required this.aiRepo,
+    required this.todoRepo,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -78,6 +96,7 @@ class MainApp extends StatelessWidget {
           create: (_) => NotesProvider(repo: noteRepo)..load(),
         ),
         ChangeNotifierProvider(create: (_) => AiProvider(aiRepo)),
+        ChangeNotifierProvider(create: (_) => TodoProvider(todoRepo)),
       ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
