@@ -84,6 +84,26 @@ class _NotesAddScreenState extends State<NotesAddScreen> {
           ),
         ),
         actions: [
+          Tooltip(
+            message: 'Generate corrected Note using AI',
+            triggerMode: TooltipTriggerMode.tap,
+            child: Container(
+              decoration: BoxDecoration(
+                shape: BoxShape.circle,
+                border: Border.all(color: Colors.blue),
+              ),
+              alignment: Alignment.center,
+              padding: EdgeInsets.all(5),
+              child: const Text(
+                'i',
+                style: TextStyle(
+                  fontSize: 12,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.blue,
+                ),
+              ),
+            ),
+          ),
           TextButton(
             onPressed: () async {
               final provider = context.read<AiProvider>();

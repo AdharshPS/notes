@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
+import 'package:notes/core/extensions/date_format_extension.dart';
 import 'package:notes/features/notes/presentation/screens/notes/notes_add_screen.dart';
 import 'package:notes/features/notes/presentation/widgets/share_note.dart';
 import 'package:provider/provider.dart';
@@ -164,7 +165,7 @@ class _NoteCard extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Text(
-                      _formatDate(note.createdAt!.toLocal()),
+                      note.createdAt?.toLocal().formatForUi ?? '',
                       style: TextStyle(
                         fontSize: 12,
                         color: Colors.grey.shade500,
@@ -183,13 +184,6 @@ class _NoteCard extends StatelessWidget {
         ),
       ),
     );
-  }
-
-  String _formatDate(DateTime? date) {
-    if (date == null) {
-      return '';
-    }
-    return '${date.day}/${date.month}/${date.year}';
   }
 }
 
