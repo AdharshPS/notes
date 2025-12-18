@@ -165,7 +165,7 @@ class _NoteCard extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Text(
-                      note.createdAt?.toLocal().formatForUi ?? '',
+                      note.createdAt?.toLocal().formatForNotes ?? '',
                       style: TextStyle(
                         fontSize: 12,
                         color: Colors.grey.shade500,

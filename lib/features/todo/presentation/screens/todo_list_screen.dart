@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:notes/core/extensions/date_format_extension.dart';
 import 'package:provider/provider.dart';
 import '../provider/todo_provider.dart';
 import 'todo_add_screen.dart';
@@ -50,17 +51,35 @@ class _TodoListScreenState extends State<TodoListScreen> {
                     vertical: 6,
                   ),
                   child: ListTile(
-                    title: Text(todo.title),
+                    title: Text(
+                      todo.title,
+                      style: const TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
                     subtitle: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         if (todo.description != null &&
                             todo.description!.isNotEmpty)
-                          Text(todo.description!),
+                          Text(
+                            todo.description!,
+                            maxLines: 3,
+                            overflow: TextOverflow.ellipsis,
+                            style: TextStyle(
+                              fontSize: 14,
+                              color: Colors.grey.shade700,
+                              height: 1.4,
+                            ),
+                          ),
                         const SizedBox(height: 4),
                         Text(
-                          "⏰ ${todo.dateTime}",
-                          style: const TextStyle(fontSize: 12),
+                          "⏰ ${todo.dateTime.toLocal().formatForReminders}",
+                          style: TextStyle(
+                            fontSize: 12,
+                            color: Colors.grey.shade500,
+                          ),
                         ),
                       ],
                     ),
