@@ -24,6 +24,7 @@ class _SplashScreenState extends State<SplashScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      
       body: Center(
         child: SizedBox.expand(
           child: Image.asset('assets/animations/noteflow.gif'),

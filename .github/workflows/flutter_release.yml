@@ -28,6 +28,7 @@ jobs:
       - name: Build release APK
         run:  |
           flutter build apk --release \
+            --flavor prod \
             --dart-define=AI_ENABLED=true \
             --dart-define=GROQ_API_KEY=${{ secrets.GROQ_API_KEY }}
 
@@ -35,4 +36,4 @@ jobs:
       - name: Create GitHub Release
         uses: softprops/action-gh-release@v2
         with:
-          files: build/app/outputs/flutter-apk/app-release.apk
+          files: build/app/outputs/flutter-apk/app-prod-release.apk

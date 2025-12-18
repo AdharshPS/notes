@@ -4,14 +4,26 @@
   // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
   "version": "0.2.0",
   "configurations": [
+
     {
-      "name": "notes",
+      "name": "NoteFlow Dev",
       "request": "launch",
       "type": "dart",
       "args": [
-            "--dart-define=AI_ENABLED=true",
-            "--dart-define=GROQ_API_KEY="
-          ]
+        "--flavor",
+        "dev",
+        "--dart-define=AI_ENABLED=false"
+      ]
+    },
+    {
+      "name": "NoteFlow Prod",
+      "request": "launch",
+      "type": "dart",
+      "args": [
+        "--flavor",
+        "prod",
+        "--dart-define=AI_ENABLED=true"
+      ]
     },
     {
       "name": "notes (profile mode)",
