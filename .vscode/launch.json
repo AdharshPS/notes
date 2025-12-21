@@ -4,14 +4,13 @@
   // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
   "version": "0.2.0",
   "configurations": [
-
     {
       "name": "NoteFlow Dev",
       "request": "launch",
       "type": "dart",
       "args": [
         "--flavor",
-        "dev",
+        "prod",
         "--dart-define=AI_ENABLED=false"
       ]
     },

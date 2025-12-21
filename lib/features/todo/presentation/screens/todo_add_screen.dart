@@ -95,7 +95,7 @@ class _TodoAddScreenState extends State<TodoAddScreen> {
     return TextFormField(
       controller: _titleController,
       decoration: const InputDecoration(
-        hintText: 'Todo title',
+        hintText: 'Reminder title',
         border: InputBorder.none,
       ),
       style: const TextStyle(fontSize: 22, fontWeight: FontWeight.w600),
@@ -181,7 +181,7 @@ class _TodoAddScreenState extends State<TodoAddScreen> {
       description: _descController.text.trim().isEmpty
           ? null
           : _descController.text.trim(),
-      dateTime: _selectedDateTime!,
+      dateTime: _selectedDateTime!.toLocal(),
     );
 
     await context.read<TodoProvider>().addTodo(todo);

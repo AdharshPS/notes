@@ -1,4 +1,4 @@
-package com.adharshps.securenotes
+package com.adharshps.notes
 
 import io.flutter.embedding.android.FlutterActivity
 

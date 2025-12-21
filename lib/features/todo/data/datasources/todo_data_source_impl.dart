@@ -1,10 +1,14 @@
+import 'package:flutter/material.dart';
 import 'package:hive_flutter/adapters.dart';
 import 'package:notes/features/todo/data/datasources/todo_data_source.dart';
+import 'package:notes/features/todo/data/datasources/todo_notification_ds.dart';
 import 'package:notes/features/todo/data/models/todo_model.dart';
 
 class TodoDataSourceImpl implements TodoDataSource {
   final Box<TodoModel> box;
-  TodoDataSourceImpl(this.box);
+  final TodoNotificationDataSource scheduler;
+  // final TodoNotificationScheduler scheduler;
+  TodoDataSourceImpl({required this.box, required this.scheduler});
 
   List<TodoModel> todoList = [];
 
@@ -19,6 +23,12 @@ class TodoDataSourceImpl implements TodoDataSource {
     int key = await box.add(todo);
     final item = todo.copyWith(id: key);
     await box.put(key, item);
+
+    debugPrint('⏰ Scheduling at: ${item.dateTime}');
+    debugPrint('🕒 Now: ${DateTime.now()}');
+
+    await scheduler.schedule(item);
+
     return item;
   }
 }

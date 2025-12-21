@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:notes/core/notification/notification_service.dart';
 import 'package:notes/features/notes/presentation/screens/notes/notes_list_screen.dart';
 import 'package:notes/features/todo/presentation/screens/todo_list_screen.dart';
 
@@ -13,6 +15,22 @@ class LandingScreen extends StatefulWidget {
 
 class _LandingScreenState extends State<LandingScreen> {
   Categories category = Categories.notes;
+
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) async {
+      final AndroidFlutterLocalNotificationsPlugin? androidImplementation =
+          NotificationService.flutterLocalNotificationPlugin
+              .resolvePlatformSpecificImplementation<
+                AndroidFlutterLocalNotificationsPlugin
+              >();
+
+      await androidImplementation?.requestNotificationsPermission();
+      await androidImplementation?.requestExactAlarmsPermission();
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
